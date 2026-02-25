@@ -43,6 +43,7 @@ STM32H735G-DK 보드와 TouchGFX GUI를 활용하여 4종류의 쓰레기를 자
 
 7. 하드웨어 연결
    | 기능 | 핀 번호 | 설명 |
+   | --- | --- | --- |
    | SM0 (Servo) |PE14 (TIM1_CH4) | 분류 방향 조정 서보 |
    | SM1 (Servo) | PD15 (TIM4_CH4) | 분류기 기울기 제어 서보 |
    | US0 (Ultrasonic) | PG5 (Trig) / PF9 (Echo)	| 상단 적재량 측정 |
