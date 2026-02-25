@@ -1043,7 +1043,7 @@ void Trigger_US2() {
     HAL_GPIO_WritePin(US2_TR_GPIO_Port, US2_TR_Pin, GPIO_PIN_RESET);
 }
 
-//상승 에지 감지 시의 타이머 시간값과 하강 에지 감지시의 시간값 반환하여 거리 계산에 사
+// 거리 계산에 사용할 상승 에지 감지 시의 타이머 시간값과 하강 에지 감지시의 시간값 반환
 void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) 
 {
     if (htim->Instance == TIM23)

@@ -4,8 +4,8 @@
 #include "cmsis_os.h" // osMessageQueuePut, osMessageQueueGet 포함
 #include "shared_sensor_types.h"
 
-#define SERVO_MIN_PULSE 3274    //0도
-#define SERVO_MAX_PULSE 6548    //180도
+#define SERVO_MIN_PULSE 3274    // 0도에 해당하는 듀티 사이클
+#define SERVO_MAX_PULSE 6548    // 180도에 해당하는 듀티 사이클
 #define SERVO_INIT_POSITION_PULSE 4911
 #define SERVO_NEUT_POSITION_PULSE 4911
 #define SERVO_EVEN_POSITION_PULSE 3474
