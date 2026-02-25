@@ -15,7 +15,6 @@
 
 extern osMessageQueueId_t sensorRequestQueueHandle;
 extern osMessageQueueId_t sensorResultQueueHandle;
-
 extern osMessageQueueId_t modelToProximityQueueHandle;
 extern osMessageQueueId_t proximityToModelQueueHandle;
 

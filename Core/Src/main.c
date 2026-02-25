@@ -989,7 +989,7 @@ void DWT_Delay_Init(void)
 {
   DWT->LAR = 0xC5ACCE55; // Unlock DWT registers
 
-  //  TRC 활성화
+  // TRC 활성화
   CoreDebug->DEMCR |=  CoreDebug_DEMCR_TRCENA_Msk; // 0x01000000;
 
   // 사이클 카운터 활성화
