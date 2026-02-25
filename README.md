@@ -42,6 +42,7 @@ STM32H735G-DK 보드와 TouchGFX GUI를 활용하여 4종류의 쓰레기를 자
   -RETURNING_TO_INIT: 모든 서보를 초기 위치로 복귀
 
 7. 하드웨어 연결
+
    | 기능 | 핀 번호 | 설명 |
    | --- | --- | --- |
    | SM0 (Servo) |PE14 (TIM1_CH4) | 분류 방향 조정 서보 |
