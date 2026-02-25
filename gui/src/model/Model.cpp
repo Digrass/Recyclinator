@@ -1,11 +1,11 @@
 #include <gui/model/Model.hpp>
 #include <gui/model/ModelListener.hpp>
 #include "main.h"
-#include "cmsis_os.h" // osMessageQueuePut, osMessageQueueGet 등을 위해
+#include "cmsis_os.h" // osMessageQueuePut, osMessageQueueGet 포함
 #include "shared_sensor_types.h"
 
-#define SERVO_MIN_PULSE 3274
-#define SERVO_MAX_PULSE 6548
+#define SERVO_MIN_PULSE 3274    //0도
+#define SERVO_MAX_PULSE 6548    //180도
 #define SERVO_INIT_POSITION_PULSE 4911
 #define SERVO_NEUT_POSITION_PULSE 4911
 #define SERVO_EVEN_POSITION_PULSE 3474
@@ -76,6 +76,7 @@ void Model::startServoSensorSequence(OperationDirection dir)
     }
 }
 
+// 매 프레임 마다 호출되어 현재 상태에 따라 프로세스를 호출하 타임아웃을 관리함
 void Model::tick()
 {
     uint32_t currentTime = HAL_GetTick();
@@ -88,31 +89,31 @@ void Model::tick()
 
     switch (currentSequenceState)
     {
-        case ServoSensorSequenceState::IDLE:
+        case ServoSensorSequenceState::IDLE:  //대기
             processIdleState();
             break;
-        case ServoSensorSequenceState::START_SEQUENCE:
+        case ServoSensorSequenceState::START_SEQUENCE:  //분류기 이동 시작
             processStartSequenceState();
             break;
-        case ServoSensorSequenceState::MOVING_CLASSIFIER1:
+        case ServoSensorSequenceState::MOVING_CLASSIFIER1: //분류기 회전
             processMovingClassifierState1(currentTime);
             break;
-        case ServoSensorSequenceState::MOVING_CLASSIFIER2:
+        case ServoSensorSequenceState::MOVING_CLASSIFIER2: //분류기 기울여서 쓰레기 투입
             processMovingClassifierState2(currentTime);
             break;
-        case ServoSensorSequenceState::ALIGNING_SENSOR:
+        case ServoSensorSequenceState::ALIGNING_SENSOR: //분류기 기울기 수평으로 하여 센서를 측정 위치로 이동
             processAligningSensorState(currentTime);
             break;
-        case ServoSensorSequenceState::SENDING_MEASUREMENT_REQUEST:
+        case ServoSensorSequenceState::SENDING_MEASUREMENT_REQUEST:  //측정 요청 전송
             processSendingMeasurementRequestState();
             break;
-        case ServoSensorSequenceState::WAITING_FOR_SENSOR_RESULT:
+        case ServoSensorSequenceState::WAITING_FOR_SENSOR_RESULT: //SensorTask로부터 결과 대기
             processWaitingForSensorResultState(currentTime);
             break;
-        case ServoSensorSequenceState::RETURNING_CLASSIFIER_TO_INIT:
+        case ServoSensorSequenceState::RETURNING_CLASSIFIER_TO_INIT:  //분류기 초기 위치로 조정
             processReturningClassifierToInitState(currentTime);
             break;
-        case ServoSensorSequenceState::SEQUENCE_COMPLETE:
+        case ServoSensorSequenceState::SEQUENCE_COMPLETE: //분류 완료
             processSequenceCompleteState();
             break;
         default:
@@ -169,7 +170,7 @@ void Model::processAligningSensorState(uint32_t currentTime)
 
 void Model::processSendingMeasurementRequestState()
 {
-    CSensorRequestMessage_t c_reqMsg; // <--- C 호환 구조체로 메시지 생성
+    CSensorRequestMessage_t c_reqMsg; // C 호환 구조체로 메시지 생성
     c_reqMsg.requestType = C_SENSOR_REQUEST_NONE; // C 호환 enum 사용
 
     // Model 내부의 currentOperationDirection (enum class) 값을 기반으로 C 호환 enum 값 설정
@@ -210,10 +211,9 @@ void Model::processSendingMeasurementRequestState()
     }
 }
 
-// 새로운 상태: SensorTask로부터 결과 대기
 void Model::processWaitingForSensorResultState(uint32_t currentTime)
 {
-    CSensorResultMessage_t c_resMsg; // <--- C 호환 구조체로 메시지 수신
+    CSensorResultMessage_t c_resMsg; // C 호환 구조체로 메시지 수신
     osStatus_t status = osMessageQueueGet(sensorResultQueueHandle, &c_resMsg, NULL, 10);
     int index = (static_cast<int>(currentOperationDirection)) - 1;
 

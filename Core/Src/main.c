@@ -27,7 +27,7 @@
 /* USER CODE BEGIN Includes */
 #include "stm32h735g_discovery_ospi.h"
 #include "stm32h7xx_hal_ospi.h"
-#include "shared_sensor_types.h"
+#include "shared_sensor_types.h" //C인 main.c과 C++인 Model 사이에 enum을 공유하기 위한 브릿지 헤더
 
 /* USER CODE END Includes */
 
@@ -90,7 +90,7 @@ const osThreadAttr_t sensorTask_attributes = {
   .priority = (osPriority_t) osPriorityNormal1,
 };
 /* USER CODE BEGIN PV */
-volatile uint8_t g_echo_state_us0 = 0; // 0: Idle/Rising edge wait, 1: Falling edge wait, 2: Measurement complete
+volatile uint8_t g_echo_state_us0 = 0; // 0: Idle/Rising edge 대기, 1: Falling edge 대기, 2: 측정 완료
 volatile uint32_t g_ic_rising_tick_us0 = 0;
 volatile uint32_t g_ic_falling_tick_us0 = 0;
 
@@ -983,25 +983,27 @@ static void MX_GPIO_Init(void)
 }
 
 /* USER CODE BEGIN 4 */
+
+//cpu의 DWT 레지스터 잠금 해제, 트레이스 활성화, 사이클 카운터 활성화 및 초기화
 void DWT_Delay_Init(void)
 {
   DWT->LAR = 0xC5ACCE55; // Unlock DWT registers
 
-  /* Enable TRC */
+  //  TRC 활성화
   CoreDebug->DEMCR |=  CoreDebug_DEMCR_TRCENA_Msk; // 0x01000000;
 
-  /* Enable  clock cycle counter */
+  // 사이클 카운터 활성화
   DWT->CTRL |=  DWT_CTRL_CYCCNTENA_Msk; //0x00000001;
 
-  /* Reset the clock cycle counter value */
+  // 카운터 초기화
   DWT->CYCCNT = 0;
 
-  /* 3 NO OPERATION instructions */
   __ASM ("NOP");
   __ASM ("NOP");
   __ASM ("NOP");
 }
 
+//마이크로초 단위의 정밀한 딜레이를 위해 CPU 사이클 카운터 사
 void DWT_Delay_us(uint32_t microseconds)
 {
     uint32_t cycles = (SystemCoreClock / 1000000L) * microseconds;
@@ -1041,7 +1043,8 @@ void Trigger_US2() {
     HAL_GPIO_WritePin(US2_TR_GPIO_Port, US2_TR_Pin, GPIO_PIN_RESET);
 }
 
-void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim)
+//상승 에지 감지 시의 타이머 시간값과 하강 에지 감지시의 시간값 반환하여 거리 계산에 사
+void HAL_TIM_IC_CaptureCallback(TIM_HandleTypeDef *htim) 
 {
     if (htim->Instance == TIM23)
     {
@@ -1149,7 +1152,7 @@ float Get_US0_Distance_NonBlocking() {
         float timer_clock_input_mhz = 275.0f;
         float tick_time_us = (float)(htim23.Init.Prescaler + 1) / timer_clock_input_mhz;
         float duration_us = duration_ticks * tick_time_us;
-        float distance_cm = (duration_us * 0.0343f) / 2.0f;
+        float distance_cm = (duration_us * 0.0343f) / 2.0f; // 
 
         g_echo_state_us0 = 0;
         return distance_cm;
@@ -1196,7 +1199,7 @@ float Get_US2_Distance_NonBlocking() {
         float timer_clock_input_mhz = 275.0f;
         float tick_time_us = (float)(htim23.Init.Prescaler + 1) / timer_clock_input_mhz;
         float duration_us = duration_ticks * tick_time_us;
-        float distance_cm = (duration_us * 0.0343f) / 2.0f;
+        float distance_cm = (duration_us * 0.0343f) / 2.0f; //음속 343m/s 가정
         g_echo_state_us2 = 0;
         return distance_cm;
     }
@@ -1211,6 +1214,8 @@ float Get_US2_Distance_NonBlocking() {
   * @retval None
   */
 /* USER CODE END Header_StartProximityTask */
+
+//사람의 접근을 2초 주기로 확인하고 오차 최소화를 위해 5번 측정 후 평균값 사용
 void StartProximityTask(void *argument)
 {
   /* USER CODE BEGIN 5 */
@@ -1320,6 +1325,8 @@ void StartProximityTask(void *argument)
 * @retval None
 */
 /* USER CODE END Header_StartSensorTask */
+
+//Model로부터 요청을 받아 특정 방향의 쓰레기 용량을 측정하여 큐로 반환함
 void StartSensorTask(void *argument)
 {
   /* USER CODE BEGIN StartSensorTask */
