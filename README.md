@@ -17,18 +17,22 @@ STM32H735G-DK 보드와 TouchGFX GUI를 활용하여 4종류의 쓰레기를 자
 <br>
 
 2. 기술 스택
-  MCU: STM32H735IGK6 (Cortex-M7, 550MHz)
-  GUI: TouchGFX (MVP 패턴 기반)
-  OS: FreeRTOS
-  Peripherals:
   
+    MCU: STM32H735IGK6 (Cortex-M7, 550MHz)
+
+   GUI: TouchGFX (MVP 패턴 기반)
+
+   OS: FreeRTOS
+
+   Peripherals:
+
     -TIM1, TIM4: 서보 모터 PWM 제어
-    
-    -TIM23: 초음파 센서 에코 측정(Input Capture)
-    
-    -OCTOSPI: 외부 Flash, HyperRam 연동
-    
-    -DWT: 마이크로초 단위 정밀 딜레이
+
+   -TIM23: 초음파 센서 에코 측정(Input Capture)
+
+   -OCTOSPI: 외부 Flash, HyperRam 연동
+
+   -DWT: 마이크로초 단위 정밀 딜레이
 
 <br>
     
