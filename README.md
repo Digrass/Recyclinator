@@ -8,11 +8,11 @@ STM32H735G-DK 보드와 TouchGFX GUI를 활용하여 4종류의 쓰레기를 자
 
     기능: 
   
-    -GUI 버튼과 서보모터를 이용한 4방향 분류
+    - GUI 버튼과 서보모터를 이용한 4방향 분류
   
-    -초음파 센서를 이용한 적재량 측정
+    - 초음파 센서를 이용한 적재량 측정
   
-    -사용자 감지를 통한 시스템 자동 활성화 및 GUI 버튼과 일정 시간 이상 사용자 미감지 시 자동 비활성화
+    - 사용자 감지를 통한 시스템 자동 활성화 및 GUI 버튼과 일정 시간 이상 사용자 미감지 시 자동 비활성화
   
 <br>
 
@@ -26,13 +26,13 @@ STM32H735G-DK 보드와 TouchGFX GUI를 활용하여 4종류의 쓰레기를 자
 
    Peripherals:
 
-   -TIM1, TIM4: 서보 모터 PWM 제어
+   - TIM1, TIM4: 서보 모터 PWM 제어
 
-   -TIM23: 초음파 센서 에코 측정(Input Capture)
+   - TIM23: 초음파 센서 에코 측정(Input Capture)
 
-   -OCTOSPI: 외부 Flash, HyperRam 연동
+   - OCTOSPI: 외부 Flash, HyperRam 연동
 
-   -DWT: 마이크로초 단위 정밀 딜레이
+   - DWT: 마이크로초 단위 정밀 딜레이
 
 <br>
     
@@ -40,13 +40,13 @@ STM32H735G-DK 보드와 TouchGFX GUI를 활용하여 4종류의 쓰레기를 자
 
    i. FreeRTOS의 멀티태스킹 구조
    
-   -TouchGFXTask: UI 렌더링 및 사용자 입력 처리
+   - TouchGFXTask: UI 렌더링 및 사용자 입력 처리
    
-   -VideoTask: LCD 영상 재생 및 그래픽 처리
+   - VideoTask: LCD 영상 재생 및 그래픽 처리
    
-   -TouchGFX의 model의 요청에 따라 특정 초음파(US0 또는 US1) 센서로 용량 측정
+   - TouchGFX의 model의 요청에 따라 특정 초음파(US0 또는 US1) 센서로 용량 측정
    
-   -ProximityTask: 사용자 감지 센서(US2)를 폴링하여 사람이 접근하면 화면 활성화
+   - ProximityTask: 사용자 감지 센서(US2)를 폴링하여 사람이 접근하면 화면 활성화
 
    <br>
 
@@ -61,17 +61,17 @@ STM32H735G-DK 보드와 TouchGFX GUI를 활용하여 4종류의 쓰레기를 자
 
    쓰레기 분류 및 측정 시퀀스는 Model.cpp에서 상태 머신으로 관리 
 
-   -IDLE: 사용자 입력 대기 및 화면 타임아웃(30초) 확인
+   - IDLE: 사용자 입력 대기 및 화면 타임아웃(30초) 확인
 
-   -MOVING_CLASSIFIER: 서보 모터를 구동하여 분류기를 해당 방향으로 회전 및 기울임
+   - MOVING_CLASSIFIER: 서보 모터를 구동하여 분류기를 해당 방향으로 회전 및 기울임
 
-   -ALIGNING_SENSOR: 측정을 위해 분류기를 수평으로 정렬
+   - ALIGNING_SENSOR: 측정을 위해 분류기를 수평으로 정렬
 
-   -SENDING_MEASUREMENT_REQUEST: SensorTask에 적재량 측정 메지 전송
+   - SENDING_MEASUREMENT_REQUEST: SensorTask에 적재량 측정 메지 전송
 
-   -WAITING_FOR_SENSOR_RESULT: 초음파 측정값 수신 및 백분율로 매핑하여 잔여 용량 표시
+   - WAITING_FOR_SENSOR_RESULT: 초음파 측정값 수신 및 백분율로 매핑하여 잔여 용량 표시
 
-   -RETURNING_TO_INIT: 모든 서보를 초기 위치로 복귀
+   - RETURNING_TO_INIT: 모든 서보를 초기 위치로 복귀
 
   <br>
 
